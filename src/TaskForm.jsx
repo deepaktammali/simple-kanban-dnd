@@ -1,6 +1,8 @@
-import { TASK_STATUS } from "./constants";
+import useStore from "./store";
 
 const TaskForm = ({ title, task, closeDialog, onSubmit }) => {
+  const taskStatuses = useStore((state) => state.status);
+
   return (
     <div className="flex flex-col gap-3">
       <h2 className="font-semibold text-white">{title}</h2>
@@ -33,9 +35,13 @@ const TaskForm = ({ title, task, closeDialog, onSubmit }) => {
             <option value={""} disabled>
               Select Status
             </option>
-            <option value={TASK_STATUS.todo}>Todo</option>
-            <option value={TASK_STATUS.inProgress}>In Progress</option>
-            <option value={TASK_STATUS.completed}>Completed</option>
+            {taskStatuses.map((taskStatus) => {
+              return (
+                <option key={taskStatus.id} value={taskStatus.id}>
+                  {taskStatus.heading}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div className="flex gap-2 w-full items-center justify-end">

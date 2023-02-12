@@ -1,7 +1,6 @@
 import produce from "immer";
 import { create } from "zustand";
 import { devtools, persist, createJSONStorage } from "zustand/middleware";
-import { TASK_STATUS } from "../constants";
 
 const useStore = create(
   devtools(

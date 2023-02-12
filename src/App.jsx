@@ -7,7 +7,6 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { useRef } from "react";
-import { TASK_STATUS } from "./constants";
 import TaskForm from "./TaskForm";
 import useStore from "./store";
 import TaskContainer from "./TaskContainer";
