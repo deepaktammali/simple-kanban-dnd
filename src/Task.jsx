@@ -35,7 +35,7 @@ const Task = ({ task }) => {
       id: task.id,
     };
 
-    editTask(task.id, task.status, updatedTask);
+    editTask(task.id, updatedTask);
     form.reset();
     closeDialog();
   };
@@ -58,7 +58,7 @@ const Task = ({ task }) => {
           className="text-red-400 hover:text-red-500 text-lg px-2"
           onClick={(event) => {
             event.preventDefault();
-            deleteTask(task.id, task.status);
+            deleteTask(task.id);
           }}
         >
           x

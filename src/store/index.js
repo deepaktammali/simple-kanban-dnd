@@ -7,59 +7,70 @@ const useStore = create(
   devtools(
     persist(
       (set) => ({
-        [TASK_STATUS.todo]: [],
-        [TASK_STATUS.inProgress]: [],
-        [TASK_STATUS.completed]: [],
-        addItem: (task, status) => {
-          // If the status is a valid status
-          // add task to that status list
-          if (Object.keys(TASK_STATUS).includes(status)) {
-            set(
-              produce((state) => {
-                state[status] = [...state[status], task];
-              })
-            );
-          }
-        },
-        moveTask: (taskId, fromStatus, toStatus) => {
+        tasks: [],
+        status: [
+          {
+            id: "todo",
+            heading: "Todo",
+          },
+          {
+            id: "inProgress",
+            heading: "In Progress",
+          },
+          {
+            id: "completed",
+            heading: "Completed",
+          },
+        ],
+        addStatus: (id, heading) => {
           set(
             produce((state) => {
-              const taskIdx = state[fromStatus].findIndex(
-                (task) => task.id === taskId
-              );
-              const task = state[fromStatus][taskIdx];
-              state[fromStatus].splice(taskIdx, 1);
-
-              const updatedTask = { ...task, status: toStatus };
-              state[toStatus].push(updatedTask);
+              state.status = [
+                ...state.status,
+                {
+                  id,
+                  heading,
+                },
+              ];
             })
           );
         },
-        editTask: (taskId, fromStatus, updatedTask) => {
+        addTask: (task) => {
           set(
             produce((state) => {
-              const taskIdx = state[fromStatus].findIndex(
-                (task) => task.id === taskId
-              );
-
-              const toStatus = updatedTask.status;
-
-              if (toStatus === fromStatus) {
-                state[fromStatus].splice(taskIdx, 1, updatedTask);
-              } else {
-                state[fromStatus].splice(taskIdx, 1);
-                state[toStatus] = [...state[toStatus], updatedTask];
-              }
+              state.tasks = [...state.tasks, task];
             })
           );
         },
-        deleteTask: (taskId, status) => {
+        moveTask: (taskId, toStatus) => {
           set(
             produce((state) => {
-              const taskIdx = state[status].findIndex(
+              const taskIdx = state.tasks.findIndex(
                 (task) => task.id === taskId
               );
-              state[status].splice(taskIdx, 1);
+              const task = state.tasks[taskIdx];
+              task.status = toStatus;
+              state.tasks.splice(taskIdx, 1, task);
+            })
+          );
+        },
+        editTask: (taskId, updatedTask) => {
+          set(
+            produce((state) => {
+              const taskIdx = state.tasks.findIndex(
+                (task) => task.id === taskId
+              );
+              state.tasks.splice(taskIdx, 1, updatedTask);
+            })
+          );
+        },
+        deleteTask: (taskId) => {
+          set(
+            produce((state) => {
+              const taskIdx = state.tasks.findIndex(
+                (task) => task.id === taskId
+              );
+              state.tasks.splice(taskIdx, 1);
             })
           );
         },

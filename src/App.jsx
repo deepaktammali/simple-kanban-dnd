@@ -13,15 +13,10 @@ import useStore from "./store";
 import TaskContainer from "./TaskContainer";
 import { nanoid } from "nanoid";
 
-const containers = [
-  { type: [TASK_STATUS.todo], heading: "Todo" },
-  { type: [TASK_STATUS.inProgress], heading: "In Progress" },
-  { type: [TASK_STATUS.completed], heading: "Completed" },
-];
-
 function App() {
+  const taskStatuses = useStore((state) => state.status);
   const moveTask = useStore((state) => state.moveTask);
-  const addItem = useStore((state) => state.addItem);
+  const addTask = useStore((state) => state.addTask);
 
   const newTaskDialogRef = useRef(null);
 
@@ -29,7 +24,7 @@ function App() {
     if (event.over) {
       const { id: taskId, status: fromStatus } = event.active.data.current;
       const toStatus = event.over.id.split("-").at(-1);
-      moveTask(taskId, fromStatus, toStatus);
+      moveTask(taskId, toStatus);
     }
   };
 
@@ -51,7 +46,7 @@ function App() {
       id: nanoid(),
     };
 
-    addItem(newTask, status);
+    addTask(newTask);
     form.reset();
     closeDialog();
   };
@@ -92,12 +87,12 @@ function App() {
             Add New Task
           </button>
           <div className="grid grid-cols-3 w-full gap-2">
-            {containers.map((container) => {
+            {taskStatuses.map((taskStatus) => {
               return (
                 <TaskContainer
-                  key={container.type}
-                  type={container.type}
-                  heading={container.heading}
+                  key={taskStatus.id}
+                  id={taskStatus.id}
+                  heading={taskStatus.heading}
                 ></TaskContainer>
               );
             })}
